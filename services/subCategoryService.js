@@ -1,6 +1,6 @@
 const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
-const subCategoryModel = require('../models/subCategoryModel')
+const SubCategoryModel = require('../models/subCategoryModel')
 const ApiError = require('../utils/apiError');
 
 // @des get SubCategories
@@ -20,7 +20,7 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
     const limit = req.query.limit * 1 || 5;
     const skip = (page - 1) * limit;
 
-    const subCategories = await subCategoryModel.find(req.filterObj).skip(skip).limit(limit);
+    const subCategories = await SubCategoryModel.find(req.filterObj).skip(skip).limit(limit);
     res.status(200).json({ result: subCategories.length, page, data: subCategories })
 });
 
@@ -30,7 +30,7 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
 // @access Public 
 exports.getSubCategory = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const subCategory = await subCategoryModel.findById(id);
+    const subCategory = await SubCategoryModel.findById(id);
     if (!subCategory) {
         return next(new ApiError(`No SubCategory found for this id :${id} `, 404))
     };
@@ -49,7 +49,7 @@ exports.setCategoryIdToBody=(req,res,next)=>{
 // @route   POST  /api/v1/subcategories
 exports.createSubCategory = asyncHandler(async (req, res) => {
     const { name, category } = req.body;
-    const subCategory = await subCategoryModel.create({
+    const subCategory = await SubCategoryModel.create({
         name,
         slug: slugify(name),
         category,
@@ -64,7 +64,7 @@ exports.createSubCategory = asyncHandler(async (req, res) => {
 exports.updateSubCategory = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { name, category } = req.body;
-    const subCategory = await subCategoryModel.findByIdAndUpdate(
+    const subCategory = await SubCategoryModel.findByIdAndUpdate(
         { _id: id },
         { name, slug: slugify(name), category },
         { new: true }
@@ -81,7 +81,7 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
 
 exports.deleteSubCategory = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const subCategory = await subCategoryModel.findByIdAndDelete({ _id: id });
+    const subCategory = await SubCategoryModel.findByIdAndDelete({ _id: id });
     if (!subCategory) {
         return next(new ApiError(`No Category found for this id :${id} `, 404))
     };

@@ -1,6 +1,10 @@
 const { check } = require('express-validator');
 const { default: slugify } = require('slugify');
+const { default: mongoose } = require('mongoose');
 const validatorMiddleware = require('../../middleware/validatorMiddleware');
+const CategoryModel = require('../../models/categoryModel');
+const SubCategoryModel = require('../../models/subCategoryModel');
+const subCategoryModel = require('../../models/subCategoryModel');
 
 exports.getProductVaildator = [
     check('id').isMongoId().withMessage('Inavalid ID formate'),
@@ -48,10 +52,38 @@ exports.createProductVaildator = [
         .isArray().withMessage('Images should be array of string'),
     check('category')
         .notEmpty().withMessage('Product must be belong to a category')
-        .isMongoId().withMessage('Inavlid ID formate'),
+        .isMongoId().withMessage('Inavlid ID formate')
+        .custom(async (value) => {
+            const category = await CategoryModel.findById(value);
+            if (!category) {
+                throw new Error(`No  category for this id ${value}`)
+            }
+            return true;
+        }),
     check('subCategories')
         .optional()
-        .isMongoId().withMessage('Inavlid ID formate'),
+        .isArray().withMessage('subCategories must be an array')
+        .custom(async (value, { req }) => {
+
+            const allValid = value.every(id =>
+                mongoose.Types.ObjectId.isValid(id)
+            );
+
+            if (!allValid) {
+                throw new Error('Invalid ID format in subCategories');
+            }
+
+            const subCategories = await SubCategoryModel.find({
+                _id: { $in: value },
+                category: req.body.category
+            });
+
+            if (subCategories.length !== value.length) {
+                throw new Error('Subcategories do not belong to this category');
+            }
+
+            return true;
+        }),
     check('brands')
         .optional()
         .isMongoId().withMessage('Inavlid ID formate'),
