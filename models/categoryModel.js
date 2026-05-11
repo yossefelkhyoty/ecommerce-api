@@ -1,25 +1,42 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
 //1-Create Schema
 
-const categorySchema= new mongoose.Schema({
-    name:{
-        type:String,
-        required:[true,'Category is Required'],
-        unique:[true,'Category must be unique'],
-        minLength:[3,'Too short name category name'],
-        maxLength:[32,'Too long name category name'],
+const categorySchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Category is Required'],
+        unique: [true, 'Category must be unique'],
+        minLength: [3, 'Too short name category name'],
+        maxLength: [32, 'Too long name category name'],
     },
-    slug:{
-        type:String,
-        lowercase:true,
+    slug: {
+        type: String,
+        lowercase: true,
     },
-    image:String,
+    image: String,
 
-}, {timestamps:true});
+}, { timestamps: true });
 
-//2-Create Model
 
-const CategoryModel=mongoose.model('Category',categorySchema);
+const setImageUrl = (doc) => {
+    if (doc.image) {
+        const imageUrl = `${process.env.BASE_URL}/categories/${doc.image}`;
+        doc.image = imageUrl;
+    }
+};
 
-module.exports=CategoryModel;
+//FindOne,FindAll and Update
+categorySchema.post('init', (doc => {
+    setImageUrl(doc);
+}));
+
+//Create
+categorySchema.post('save', (doc => {
+    setImageUrl(doc);
+}));
+
+//Create Model
+const CategoryModel = mongoose.model('Category', categorySchema);
+
+module.exports = CategoryModel;

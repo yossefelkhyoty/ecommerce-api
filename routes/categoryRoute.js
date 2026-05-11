@@ -10,7 +10,9 @@ const {
     getCategory,
     createCategories,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    uploadCategoryImage,
+    relizeImage
 } = require('../services/categoryService')
 const SubcategoryRoute=require('./subCategoryRoute');
 
@@ -21,12 +23,12 @@ router.use('/:categoryId/subcategories',SubcategoryRoute);
 router
     .route('/')
     .get(getCategories)
-    .post(createCategoryValidator,createCategories);
+    .post(uploadCategoryImage,relizeImage,createCategoryValidator,createCategories);
 router
     .route('/:id')
     .get(getCategoryValidator
     ,getCategory)
-    .put(updateCategoryValidator,updateCategory)
+    .put(uploadCategoryImage,relizeImage,updateCategoryValidator,updateCategory)
     .delete(deleteCategoryValidator,deleteCategory)
 
 

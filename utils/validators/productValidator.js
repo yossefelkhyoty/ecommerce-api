@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
 const { default: slugify } = require('slugify');
+const { check, body } = require('express-validator');
 const { default: mongoose } = require('mongoose');
 const validatorMiddleware = require('../../middleware/validatorMiddleware');
 const CategoryModel = require('../../models/categoryModel');
@@ -16,6 +16,10 @@ exports.createProductVaildator = [
         .isLength({ max: 100 }).withMessage('must be less than 100 chars.')
         .custom((value, { req }) => {
             req.body.slug = slugify(value);
+            return true;
+        })
+        .custom((val, { req }) => {
+            req.body.slug = slugify(val);
             return true;
         }),
     check('description')
@@ -99,6 +103,10 @@ exports.createProductVaildator = [
 ];
 exports.updateProductVaildator = [
     check('id').isMongoId().withMessage('Inavalid ID formate'),
+    body('title').optional().custom((val, { req }) => {
+        req.body.slug = slugify(val);
+        return true;
+    }),
     validatorMiddleware,
 ];
 exports.deleteProductVaildator = [
