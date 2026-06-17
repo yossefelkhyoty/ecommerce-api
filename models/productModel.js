@@ -86,7 +86,7 @@ const setImageUrl = (doc) => {
             const imageUrl = `${process.env.BASE_URL}/products/${image}`;
             imageList.push(imageUrl);
         });
-        doc.images=imageList
+        doc.images = imageList
     }
 };
 

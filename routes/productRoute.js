@@ -14,19 +14,39 @@ const {
     uploadProductImages,
     relizeProductImages
 } = require('../services/productService')
+const authService = require('../services/authServices');
 
 const router = express.Router();
 
 router
     .route('/')
     .get(getProducts)
-    .post(uploadProductImages,relizeProductImages,createProductVaildator, createProducts);
+    .post(
+        authService.protect,
+        authService.allowedTo("admin", "manager"),
+        uploadProductImages,
+        relizeProductImages,
+        createProductVaildator,
+        createProducts
+    );
 router
     .route('/:id')
     .get(getProductVaildator
         , getProduct)
-    .put(uploadProductImages,relizeProductImages,updateProductVaildator, updateProduct)
-    .delete(deleteProductVaildator, deleteProduct)
+    .put(
+        authService.protect,
+        authService.allowedTo("admin", "manager"),
+        uploadProductImages,
+        relizeProductImages,
+        updateProductVaildator,
+        updateProduct
+    )
+    .delete(
+        authService.protect,
+        authService.allowedTo("admin"),
+        deleteProductVaildator,
+        deleteProduct
+    );
 
 
 module.exports = router;

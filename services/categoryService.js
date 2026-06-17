@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const sharp = require('sharp');
 
 const handlerFactory = require("./handlersFactory");
-const{uploadSingleImage}=require('../middleware/uploadImageMiddleware')
+const { uploadSingleImage } = require('../middleware/uploadImageMiddleware')
 const CategoryModel = require('../models/categoryModel');
 
 // ensure upload directory exists

@@ -4,7 +4,7 @@ const { default: mongoose } = require('mongoose');
 const validatorMiddleware = require('../../middleware/validatorMiddleware');
 const CategoryModel = require('../../models/categoryModel');
 const SubCategoryModel = require('../../models/subCategoryModel');
-const subCategoryModel = require('../../models/subCategoryModel');
+
 
 exports.getProductVaildator = [
     check('id').isMongoId().withMessage('Inavalid ID formate'),
