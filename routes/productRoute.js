@@ -15,8 +15,12 @@ const {
     relizeProductImages
 } = require('../services/productService')
 const authService = require('../services/authServices');
+const reviewRoute = require('./reviewRoute');
+
 
 const router = express.Router();
+
+router.use('/:productId/reviews', reviewRoute);
 
 router
     .route('/')

@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs')
 
 const ApiError = require('../utils/apiError');
 const sendEmail = require('../utils/sendEmail');
-const createToken=require('../utils/createToken');
+const createToken = require('../utils/createToken');
 
 const UserModel = require('../models/userModel');
 
@@ -58,7 +58,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
     if (!token) {
         return next(new ApiError('You are not login,please login to get access this route ', 401));
     }
-
     //2-Verfiy token (no change happens, expired token)
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
@@ -200,5 +199,5 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     //3-Generate token
     const token = createToken(user._id);
-    res.status(200).json({token})
+    res.status(200).json({ token })
 });

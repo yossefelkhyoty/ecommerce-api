@@ -18,7 +18,6 @@ const {
     updateLoggedUserPassword,
     updateLoggedUserData,
     deleteLoggedUser,
-    restoreLoggedUser,
     uploadUserImage,
     relizeImage
 } = require('../services/userService')

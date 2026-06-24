@@ -68,7 +68,7 @@ exports.getProducts = handlerFactory.getAll(ProductModel, "products");
 // @des get Product by id
 // @post GET /api/v1/Products/:id
 // @access Public 
-exports.getProduct = handlerFactory.getOne(ProductModel);
+exports.getProduct = handlerFactory.getOne(ProductModel,'reviews');
 
 // @des create Product
 // @post POST /api/v1/Products

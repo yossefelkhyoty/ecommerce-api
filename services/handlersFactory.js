@@ -5,11 +5,21 @@ const ApiFeatures = require("../utils/apiFeatures");
 exports.deleteOne = (Model) =>
     asyncHandler(async (req, res, next) => {
         const { id } = req.params;
-        const document = await Model.findByIdAndDelete({ _id: id });
-        if (!document) {
-            return next(new ApiError(`No document found for this id :${id} `, 404))
-        };
-        res.status(204).send();
+
+        const document = await Model.findOneAndDelete({ _id: id });
+
+        if (document) {
+            if (Model.modelName === 'Review') {
+                const productId = document.product;
+
+                // Recalculate average ratings and quantity for the product
+                await Model.calcAvgRatingsAndQuantity(productId);
+            }
+
+            res.status(200).json({ item: `${document._id} : successfully deleted` });
+        } else {
+            return next(new ApiError(`No Document for this id ${id}`, 404));
+        }
     });
 
 exports.updateOne = (Model) =>
@@ -22,6 +32,10 @@ exports.updateOne = (Model) =>
         if (!document) {
             return next(new ApiError(`No document found for this id :${id} `, 404))
         };
+
+        //Trigger "update" event when update document
+        document.save();
+
         res.status(200).json({ data: document });
     });
 
@@ -31,10 +45,14 @@ exports.createOne = (Model) =>
         res.status(201).json({ data: document });
     });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, populationOpt) =>
     asyncHandler(async (req, res, next) => {
         const { id } = req.params;
-        const document = await Model.findById(id);
+        let query = Model.findById(id);
+        if (populationOpt) {
+            query = query.populate(populationOpt);
+        }
+        const document = await query;
         if (!document) {
             return next(new ApiError(`No document found for this id :${id} `, 404));
         }
