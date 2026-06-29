@@ -29,10 +29,10 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 - Search, Filter, Sort
 - Image Upload (Single & Multiple)
 - Authentication & Authorization
+- Reviews & Wishlist
 ---
 
 ### 🔄 In Progress
-- Reviews & Wishlist
 - Shopping Cart
 - Coupons System
 - Orders & Payments
