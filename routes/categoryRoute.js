@@ -15,7 +15,7 @@ const {
     relizeImage
 } = require('../services/categoryService')
 
-const authService = require('../services/authServices');
+const authService = require('../services/authService');
 const SubcategoryRoute = require('./subCategoryRoute');
 
 const router = express.Router();

@@ -14,7 +14,7 @@ const {
     uploadProductImages,
     relizeProductImages
 } = require('../services/productService')
-const authService = require('../services/authServices');
+const authService = require('../services/authService');
 const reviewRoute = require('./reviewRoute');
 
 

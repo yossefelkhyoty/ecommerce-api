@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { singupValidator, loginValidator } = require('../utils/validators/authValidator')
-const { signup, login, forgetPassword, verifyResetCode, resetPassword } = require('../services/authServices')
+const { signup, login, forgetPassword, verifyResetCode, resetPassword } = require('../services/authService')
 
 const router = express.Router();
 

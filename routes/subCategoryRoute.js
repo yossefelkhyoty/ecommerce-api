@@ -15,7 +15,7 @@ const {
     setCategoryIdToBody,
     filterObj
 } = require('../services/subCategoryService');
-const authService = require('../services/authServices');
+const authService = require('../services/authService');
 
 const router = express.Router({ mergeParams: true });
 

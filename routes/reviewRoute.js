@@ -15,7 +15,7 @@ const {
     filterObj
 } = require('../services/reviewServices');
 
-const authService = require('../services/authServices');
+const authService = require('../services/authService');
 
 const router = express.Router({mergeParams:true});
 

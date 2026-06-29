@@ -1,8 +1,8 @@
 const express = require('express');
 
 const { addWishlistValidator, removeWishlistValidator } = require('../utils/validators/wishlsitValidator');
-const { addProductToWishlist, removeProductToWishlist, getLoggedUserWishlist } = require('../services/wishlistServices');
-const authService = require('../services/authServices');
+const { addProductToWishlist, removeProductToWishlist, getLoggedUserWishlist } = require('../services/wishlistService');
+const authService = require('../services/authService');
 
 const router = express.Router();
 

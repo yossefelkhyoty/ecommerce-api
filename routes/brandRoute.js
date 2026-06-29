@@ -14,7 +14,7 @@ const {
     uploadBrandImage,
     relizeImage
 } = require('../services/barndService');
-const authService = require('../services/authServices');
+const authService = require('../services/authService');
 
 const router = express.Router();
 
