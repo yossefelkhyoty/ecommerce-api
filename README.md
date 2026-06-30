@@ -1,6 +1,7 @@
 # 🛒 E-Commerce RESTful API (Node.js & Express)
 
 ## 📌 Overview
+
 This project is a RESTful API for an E-Commerce application built using Node.js, Express, and MongoDB.
 
 ⚠️ Note: This project is still in progress and not all features are completed yet.
@@ -8,6 +9,7 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 ---
 
 ## 🚀 Project Goal
+
 - Practice Backend Development using Node.js
 - Build a scalable RESTful API
 - Work with MongoDB & Mongoose
@@ -18,6 +20,7 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 ## 🧩 Features
 
 ### ✅ Completed
+
 - Express Server Setup
 - MongoDB Connection
 - CRUD Operations:
@@ -30,16 +33,18 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 - Image Upload (Single & Multiple)
 - Authentication & Authorization
 - Reviews & Wishlist
+- Coupons System
+- Shopping Cart
+
 ---
 
 ### 🔄 In Progress
-- Shopping Cart
-- Coupons System
 - Orders & Payments
 
 ---
 
 ### 🔒 Planned
+
 - Security Enhancements
 - Deployment
 - Performance Optimization
@@ -47,6 +52,7 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 ---
 
 ## 🛠️ Tech Stack
+
 - Node.js
 - Express.js
 - MongoDB
@@ -66,7 +72,6 @@ project/
 ├── config/
 └── server.js
 
-
 ---
 
 ## ⚙️ Run Locally
@@ -75,15 +80,14 @@ project/
 
 npm install
 
-
 ### Run server
 
 npm run dev
 
-
 ---
 
 ## 📚 Learning Outcomes
+
 - Building REST APIs
 - Error Handling
 - Clean Architecture
@@ -92,10 +96,12 @@ npm run dev
 ---
 
 ## 📌 Notes
+
 - This project is part of my learning journey
 - It is continuously updated
 
 ---
 
 ## 👨‍💻 Author
+
 Youssef Mohamed
