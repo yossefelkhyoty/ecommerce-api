@@ -3,6 +3,9 @@ const path = require('path')
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require("morgan");
+const cors = require('cors');
+const compression = require('compression');
+
 
 dotenv.config();
 const ApiError = require('./utils/apiError');
@@ -16,6 +19,10 @@ dbConnection();
 
 
 const app = express();
+//Enable other domains access to your applications 
+app.use(cors());
+//comperss all response
+app.use(compression());
 
 
 //Middlwares
