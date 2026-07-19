@@ -1,7 +1,4 @@
-console.log("Stripe key:", process.env.STRIPE_SECRET?.slice(0, 10));
-
-const Stripe = require("stripe");
-const stripe = new Stripe(process.env.STRIPE_SECRET);
+const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const asyncHandler = require('express-async-handler');
 
 const handlerFactory = require("./handlersFactory");
