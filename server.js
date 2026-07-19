@@ -61,3 +61,6 @@ process.on('unhandledRejection', (err) => {
         process.exit(1);
     })
 })
+
+
+console.log("STRIPE_SECRET:", process.env.STRIPE_SECRET ? "FOUND" : "NOT FOUND");
