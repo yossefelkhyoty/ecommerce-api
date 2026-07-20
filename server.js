@@ -26,7 +26,7 @@ app.use(cors());
 app.use(compression());
 
 // Checkout webhook
-app.post('/api/v1/webhook', express.raw({type: 'application/json'}),webhookCheckout);
+app.post('/api/v1/webhook-checkout', express.raw({type: 'application/json'}),webhookCheckout);
 
 
 //Middlwares
