@@ -200,9 +200,10 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
             process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (err) {
-        return res.sendStatus(400).send(`Webhook Error: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
     }
     if (event.type === "checkout.session.completed") {
         console.log('Create Order here...')
     }
+    res.status(200).json({ received: true });
 });
