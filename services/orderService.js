@@ -219,7 +219,6 @@ const createCardOrder = async (session) => {
         // 6) Clear cart depend on cartId
         await CartModel.findByIdAndDelete(cartId);
     };
-    res.status(201).json({ status: 'Success', data: order })
 }
 
 
