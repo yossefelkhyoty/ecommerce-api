@@ -5,15 +5,20 @@ const dotenv = require('dotenv');
 const morgan = require("morgan");
 const cors = require('cors');
 const compression = require('compression');
-
+const hpp = require('hpp-clean');
+const mongoSanitize = require('@exortek/express-mongo-sanitize');
+const { xss } = require('express-xss-sanitizer');
 
 dotenv.config();
 const ApiError = require('./utils/apiError');
 const globalError = require('./middleware/errorMiddleware')
 const dbConnection = require('./config/database');
+const { apiLimiter } = require('./middleware/rateLimit.middleware');
 //Routes
 const mountRoutes = require('./routes');
-const {webhookCheckout}=require('./services/orderService');
+const { webhookCheckout } = require('./services/orderService');
+
+
 
 //CONNECT WITH DB
 dbConnection();
@@ -26,18 +31,39 @@ app.use(cors());
 app.use(compression());
 
 // Checkout webhook
-app.post('/api/v1/webhook-checkout', express.raw({type: 'application/json'}),webhookCheckout);
+app.post('/api/v1/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
 
 
 //Middlwares
 app.set('query parser', 'extended');
-app.use(express.json());
+app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan('dev'));
     console.log(`mode: ${process.env.NODE_ENV}`);
 }
+
+// To remove data using these defaults:
+app.use(mongoSanitize());
+app.use(xss());
+
+// Apply the rate limiting middleware to all requests.
+app.use('/api', apiLimiter);
+
+//Middleware to protect against HTTP Parameter pollution attacks   
+app.use(
+    hpp({
+        whitelist: [
+            'price',
+            'sold',
+            'quantity',
+            'ratingsAverage',
+            'ratingsQuantity',
+        ],
+    })
+);
+
 
 //Mount Routes
 mountRoutes(app);

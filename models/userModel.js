@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
     },
     passwordChangedAt: Date,
-    passwordResetCode: String,
+    passwordResetCode: {
+        type: String,
+        select: false,
+    },
     passwordResetExpires: Date,
     passwordVerified: Boolean,
     phone: String,
@@ -28,6 +31,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'password required'],
         minLength: [6, 'Too Short password'],
+        select: false,
     },
     role: {
         type: String,

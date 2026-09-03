@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs')
 const ApiError = require('../utils/apiError');
 const sendEmail = require('../utils/sendEmail');
 const createToken = require('../utils/createToken');
+const { sanitizeUser } = require('../utils/sanitizeData');
 
 const UserModel = require('../models/userModel');
 
@@ -24,7 +25,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
     //2-Generate token
     const token = createToken(user._id);
 
-    res.status(201).json({ data: user, token });
+    res.status(201).json({ data: sanitizeUser(user), token });
 
 });
 
@@ -33,7 +34,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
 // @access Public 
 exports.login = asyncHandler(async (req, res, next) => {
     //1-Check if user exist & Check if password is correct
-    const user = await UserModel.findOne({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email }).select('+password');
 
     if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
         return next(new ApiError('Incorrect password or email', 401));
@@ -41,7 +42,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     //2-Generate token
     const token = createToken(user._id);
 
-    res.status(200).json({ data: user, token });
+    res.status(200).json({ data: sanitizeUser(user), token });
 
 })
 

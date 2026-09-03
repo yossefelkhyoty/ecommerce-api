@@ -61,7 +61,7 @@ exports.changeUserPasswordValidator = [
         .withMessage('Password must be at least 6 characters')
         .custom(async (password, { req }) => {
             //1)current password
-            const user = await UserModel.findById(req.params.id);
+            const user = await UserModel.findById(req.params.id).select('+password');
             if (!user) {
                 throw new Error('There is no user for this id');
             }
