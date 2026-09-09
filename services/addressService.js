@@ -43,7 +43,7 @@ exports.removeAddress = asyncHandler(async (req, res, next) => {
 // @access  Protected/User
 
 exports.getLoggedUserAddress = asyncHandler(async (req, res, next) => {
-    const user = await UserModel.findById(req.user._id).populate('addresses');
+    const user = await UserModel.findById(req.user._id);
 
     res.status(200).json({ status: 'Success', result: user.addresses.length, data: user.addresses });
 });

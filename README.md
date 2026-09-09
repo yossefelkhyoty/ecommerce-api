@@ -19,8 +19,6 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 
 ## 🧩 Features
 
-### ✅ Completed
-
 - Express Server Setup
 - MongoDB Connection
 - CRUD Operations:
@@ -38,9 +36,6 @@ This project is a RESTful API for an E-Commerce application built using Node.js,
 - Shopping Cart
 - Orders & Payments (Stripe Webhook)
 - **Security & Data Protection Enhancements**
-
----
-
 
 ---
 

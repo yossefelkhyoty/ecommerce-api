@@ -25,6 +25,9 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
     const { productId, color } = req.body;
 
     const product = await ProductModel.findById(productId);
+    if (!product) {
+        return next(new ApiError('Product not found', 404));
+    }
     //1)Get Cart for logged user
     let cart = await CartModel.findOne({ user: req.user._id });
     if (!cart) {
@@ -68,7 +71,7 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
 // @access  Private/User
 
 exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
-    cart = await CartModel.findOne({ user: req.user._id });
+    const cart = await CartModel.findOne({ user: req.user._id });
 
     if (!cart) {
         return next(
@@ -136,7 +139,7 @@ exports.updateCartQuantity = asyncHandler(async (req, res, next) => {
     }
     const itemIndex = cart.cartItems.findIndex((item) => item._id.toString() === req.params.itemId);
     if (itemIndex > -1) {
-        cartItem = cart.cartItems[itemIndex]
+        const cartItem = cart.cartItems[itemIndex];
         cartItem.quantity = quantity;
         cart.cartItems[itemIndex] = cartItem;
     } else {

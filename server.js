@@ -8,6 +8,8 @@ const compression = require('compression');
 const hpp = require('hpp-clean');
 const mongoSanitize = require('@exortek/express-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 
 dotenv.config();
 const ApiError = require('./utils/apiError');
@@ -25,6 +27,11 @@ dbConnection();
 
 
 const app = express();
+app.use(cookieParser());
+
+// Set Security HTTP Headers
+app.use(helmet());
+
 //Enable other domains access to your applications 
 app.use(cors());
 //comperss all response

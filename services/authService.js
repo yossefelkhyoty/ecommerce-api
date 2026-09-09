@@ -11,6 +11,15 @@ const { sanitizeUser } = require('../utils/sanitizeData');
 
 const UserModel = require('../models/userModel');
 
+//@Create Cookie options
+const cookieOptions = {
+    maxAge: process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+};
+
+
 // @des signup
 // @post GET /api/v1/auth/signup
 // @access Public 
@@ -24,7 +33,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
 
     //2-Generate token
     const token = createToken(user._id);
-
+    res.cookie('token', token, cookieOptions);
     res.status(201).json({ data: sanitizeUser(user), token });
 
 });
@@ -41,10 +50,27 @@ exports.login = asyncHandler(async (req, res, next) => {
     }
     //2-Generate token
     const token = createToken(user._id);
-
-    res.status(200).json({ data: sanitizeUser(user), token });
+    res.cookie('token', token, cookieOptions);
+    res.status(200).json({ data: sanitizeUser(user) });
 
 })
+
+// @des logout
+// @post GET /api/v1/auth/logout
+// @access Public 
+exports.logout = asyncHandler(async (req, res, next) => {
+
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    });
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Logged out successfully'
+    });
+});
 
 // @des make sure the user logged in
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -55,6 +81,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
         req.headers.authorization.startsWith('Bearer')
     ) {
         token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies && req.cookies.token) {
+        token = req.cookies.token;
     }
     if (!token) {
         return next(new ApiError('You are not login,please login to get access this route ', 401));
@@ -200,5 +228,6 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     //3-Generate token
     const token = createToken(user._id);
+    res.cookie('token', token, cookieOptions);
     res.status(200).json({ token })
 });
