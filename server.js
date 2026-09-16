@@ -27,6 +27,10 @@ dbConnection();
 
 
 const app = express();
+
+// Enable trust proxy (required when behind a proxy like abasthan, Cloudflare, Heroku, Render, etc.)
+app.set('trust proxy', 1);
+
 app.use(cookieParser());
 
 // Set Security HTTP Headers
@@ -54,6 +58,7 @@ if (process.env.NODE_ENV === "development") {
 // To remove data using these defaults:
 app.use(mongoSanitize());
 app.use(xss());
+
 
 // Apply the rate limiting middleware to all requests.
 app.use('/api', apiLimiter);

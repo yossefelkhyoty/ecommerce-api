@@ -1,144 +1,168 @@
-# 🛒 E-Commerce RESTful API (Node.js & Express)
+# 🛒 E-Commerce RESTful API
+
+> A production-ready RESTful API for an E-Commerce application built with **Node.js**, **Express.js**, and **MongoDB**.
+
+---
 
 ## 📌 Overview
 
-This project is a RESTful API for an E-Commerce application built using Node.js, Express, and MongoDB.
-
-⚠️ Note: This project is still in progress and not all features are completed yet.
+A full-featured E-Commerce backend API covering the complete shopping lifecycle — from user authentication and product browsing to cart management, coupon discounts, order processing, and Stripe payment integration.
 
 ---
 
-## 🚀 Project Goal
+## 🚀 Key Features
 
-- Practice Backend Development using Node.js
-- Build a scalable & secure RESTful API
-- Work with MongoDB & Mongoose
-- Implement real-world E-Commerce features & security best practices
+### 🛍️ Core E-Commerce
+- **Categories** — Full CRUD with nested SubCategories
+- **Brands & Products** — With image upload (single & multiple), search, filter, sort, and pagination
+- **Reviews** — Authenticated users can add/edit/delete reviews with average rating calculation
+- **Wishlist** — Add/remove products to personal wishlist
+- **Shopping Cart** — Add items, apply coupon discounts, and manage quantities
+- **Coupons** — Admin-managed discount codes with expiry dates
+- **Orders** — Cash on delivery & online Stripe payment with Webhook support
+- **Addresses** — Users can save multiple shipping addresses
 
----
+### 🔐 Authentication & Authorization
+- JWT-based authentication (Access Token)
+- Role-based access control (User / Admin)
+- Password reset via email with a 6-digit OTP (Nodemailer)
+- Secure password hashing with bcryptjs
 
-## 🧩 Features
+### 🛡️ Security Enhancements
 
-- Express Server Setup
-- MongoDB Connection
-- CRUD Operations:
-  - Categories
-  - SubCategories
-  - Brands
-  - Products
-- Validation & Error Handling
-- Search, Filter, Sort, Pagination
-- Image Upload (Single & Multiple using Multer & Sharp)
-- Authentication & Authorization (JWT)
-- Password Reset via Email (Nodemailer)
-- Reviews & Wishlist
-- Coupons System
-- Shopping Cart
-- Orders & Payments (Stripe Webhook)
-- **Security & Data Protection Enhancements**
+| Security Measure | Implementation |
+|---|---|
+| Rate Limiting | `express-rate-limit` — 5 login attempts / 15 min |
+| NoSQL Injection | `express-mongo-sanitize` — filters `$` and `.` operators |
+| XSS Protection | `express-xss-sanitizer` — sanitizes HTML/JS from input |
+| HTTP Param Pollution | `hpp-clean` — with whitelisted filter params |
+| Secure HTTP Headers | `helmet` |
+| Request Size Limit | `express.json({ limit: '20kb' })` |
+| Data Sanitization | `sanitizeUser()` — only exposes necessary user fields |
+| Sensitive Field Protection | `select: false` on `password` & `passwordResetCode` |
 
----
-
-## 🛡️ Security Enhancements
-
-To ensure application reliability and protect against common web vulnerabilities, the following security measures have been implemented:
-
-1. **Take Precautions Against Brute-Forcing By Applying RateLimiter**
-   - Applied `express-rate-limit` across endpoints to prevent brute-forcing and denial-of-service attempts.
-   - **General API**: 100 requests / 15 minutes.
-   - **Auth (`/signup`, `/login`)**: 5 attempts / 15 minutes.
-   - **Password Reset (`/forgotPassword`)**: 3 attempts / hour.
-   - **Reset Code Verification (`/verifyResetCode`)**: 10 attempts / 15 minutes.
-
-2. **Data Sanitization (NoSQL Injection & XSS Protection)**
-   - **NoSQL Injection Defense**: Integrated `express-mongo-sanitize` to filter out `$` and `.` operators from incoming requests.
-   - **XSS Protection**: Integrated `express-xss-sanitizer` to sanitize HTML/JS scripts from user input.
-
-3. **Return Only Necessary Fields**
-   - **Schema-Level Exclusions**: Configured `select: false` on sensitive attributes like `password` and `passwordResetCode` in `userModel`.
-   - **Sanitized Response Objects**: Utilized `sanitizeUser()` helper to sanitize user output payload, ensuring only necessary user fields (`_id`, `name`, `email`, `role`, `profileImg`) are exposed to the client.
-
-4. **Prevent HTTP Parameter Pollution (HPP)**
-   - Applied `hpp-clean` middleware to prevent HTTP parameter pollution while whitelisting allowed filter params (`price`, `sold`, `quantity`, `ratingsAverage`, `ratingsQuantity`).
-
-5. **Set Request Size Limit**
-   - Configured `express.json({ limit: '20kb' })` to restrict incoming JSON payload size and mitigate DoS attack vectors.
+### 🔍 Advanced Querying
+- **Search** — by keyword across name/description
+- **Filter** — by price range, ratings, quantity
+- **Sort** — by any field (asc/desc)
+- **Pagination** — with configurable page size
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MongoDB & Mongoose
-- **Security & Middleware**: `express-rate-limit`, `@exortek/express-mongo-sanitize`, `express-xss-sanitizer`, `hpp-clean`, `bcryptjs`, `jsonwebtoken`
-- **Utilities**: `nodemailer`, `multer`, `sharp`
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js |
+| Framework | Express.js v5 |
+| Database | MongoDB + Mongoose |
+| Authentication | JSON Web Token (JWT) |
+| Payments | Stripe + Webhook |
+| Image Processing | Multer + Sharp |
+| Email | Nodemailer (Gmail SMTP) |
+| Security | Helmet, Rate Limit, HPP, XSS, Mongo Sanitize |
+| Code Quality | ESLint (Airbnb) + Prettier |
 
 ---
 
 ## 📂 Project Structure
 
 ```
-project/
+ecommerce-api/
 │
-├── config/             # DB & Environment Configuration
-├── controllers/        # Route logic handlers
-├── middleware/         # Custom & Security Middlewares (Error, RateLimit, etc.)
-├── models/             # Mongoose Schemas & Data Models
-├── routes/             # API Routes definitions
-├── services/           # Business logic & Database interactions
-├── utils/              # Helper utilities (Validators, Email, Sanitization, API Features)
-└── server.js           # Express App Entry Point
+├── config/             # DB connection & environment setup
+├── middleware/         # Error handler, Rate limiters
+├── models/             # Mongoose schemas (User, Product, Order, ...)
+├── routes/             # API route definitions
+├── services/           # Business logic & DB interactions
+├── utils/              # Validators, ApiError, ApiFeatures, Email
+└── server.js           # App entry point
 ```
 
 ---
 
-## ⚙️ Run Locally
+## ⚙️ Getting Started
 
-### 1. Install dependencies
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/ecommerce-api.git
+cd ecommerce-api
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Variables (`.env`)
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory:
 
 ```env
 PORT=8080
 NODE_ENV=development
+
+# MongoDB
 DB_URI=your_mongodb_connection_string
+
+# JWT
 JWT_SECRET_KEY=your_jwt_secret
+JWT_EXPIRE_TIME=90d
+
+# Email (Gmail)
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=465
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password
+
+# Stripe
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 ```
 
-### 3. Run server
+### 4. Run the server
 
 ```bash
+# Development
 npm run start:dev
+
+# Production
+npm run start:prod
 ```
+
+---
+
+## 📡 API Endpoints
+
+| Resource | Base URL |
+|---|---|
+| Auth | `POST /api/v1/auth/signup` · `login` · `forgotPassword` · `verifyResetCode` · `resetPassword` |
+| Users | `GET/PATCH /api/v1/users/me` · Admin CRUD `/api/v1/users` |
+| Categories | `/api/v1/categories` |
+| SubCategories | `/api/v1/categories/:categoryId/subcategories` |
+| Brands | `/api/v1/brands` |
+| Products | `/api/v1/products` |
+| Reviews | `/api/v1/products/:productId/reviews` |
+| Wishlist | `/api/v1/wishlist` |
+| Addresses | `/api/v1/addresses` |
+| Cart | `/api/v1/cart` |
+| Coupons | `/api/v1/coupons` |
+| Orders | `/api/v1/orders` · Stripe checkout |
 
 ---
 
 ## 📚 Learning Outcomes
 
-- Building RESTful APIs with Clean Architecture
-- Handling Authentication & Authorization with JWT
-- Comprehensive Data Security & Sanitization
-- Error Handling & Input Validation
-- Production-Ready Backend Best Practices
-
----
-
-## 📌 Notes
-
-- This project is part of my learning journey
-- It is continuously updated
+- Designing and building a RESTful API with clean layered architecture
+- JWT authentication with role-based access control
+- Stripe payment integration with real Webhook handling
+- Production-ready security best practices
+- Comprehensive input validation and error handling
 
 ---
 
 ## 👨‍💻 Author
 
-Youssef Mohamed
+**Youssef Mohamed**
