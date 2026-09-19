@@ -235,6 +235,7 @@ const createCardOrder = async (session) => {
 // @route   POST /api/v1/webhook-checkout
 // @access  Protected/User
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+    console.log('>>> STRIPE WEBHOOK HIT RECEIVED! <<<');
     let event = req.body;
 
     const signature = req.headers['stripe-signature'];
