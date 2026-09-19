@@ -193,7 +193,17 @@ const createCardOrder = async (session) => {
     const orderPrice = session.amount_total / 100;
 
     const cart = await CartModel.findById(cartId);
-    const user = await UserModel.findOne({ email: session.customer_email });
+    if (!cart) {
+        console.error(`Webhook Error: Cart with ID ${cartId} not found.`);
+        return;
+    }
+
+    const customerEmail = session.customer_email || session.customer_details?.email;
+    const user = await UserModel.findOne({ email: customerEmail });
+    if (!user) {
+        console.error(`Webhook Error: User with email ${customerEmail} not found.`);
+        return;
+    }
 
     // 4) Create order with default paymentMethodType Card
     const order = await OrderModel.create({
@@ -208,7 +218,6 @@ const createCardOrder = async (session) => {
 
     // 5) After creating order, decrement product quantity, increment product sold
     if (order) {
-
         const bulkOptions = cart.cartItems.map(item => ({
             updateOne: {
                 filter: { _id: item.product },
@@ -218,9 +227,9 @@ const createCardOrder = async (session) => {
         await ProductModel.bulkWrite(bulkOptions);
         // 6) Clear cart depend on cartId
         await CartModel.findByIdAndDelete(cartId);
-    };
-}
-
+        console.log(`Order created successfully for cart: ${cartId}`);
+    }
+};
 
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /api/v1/webhook-checkout
@@ -236,10 +245,16 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
             process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (err) {
+        console.error(`Webhook Signature Error: ${err.message}`);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+
     if (event.type === "checkout.session.completed") {
-        createCardOrder(event.data.object)
+        try {
+            await createCardOrder(event.data.object);
+        } catch (err) {
+            console.error(`Webhook Order Creation Error: ${err.message}`);
+        }
     }
     res.status(200).json({ received: true });
 });
